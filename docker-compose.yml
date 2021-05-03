@@ -1,0 +1,12 @@
+version: '3.3'
+
+services:
+    mysql_db:
+        image: mysql:latest
+        environment: 
+            MYSQL_ROOT_PASSWORD: 'docker'
+        ports:
+            - '3306:3306'
+        dockerfile: 
+volumes: 
+    ? my_data
