@@ -1,0 +1,9 @@
+version: "3.7" 
+
+services: 
+    mydb: 
+        build: .
+        ports: 
+            - "3306:3306"
+        volumes: 
+            - "C:/Users/mlund/Desktop/Data:/var/lib/mysql"
