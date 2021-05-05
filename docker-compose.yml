@@ -6,4 +6,6 @@ services:
         ports: 
             - "3306:3306"
         volumes: 
-            - "C:/Data:/var/lib/mysql"
+            - "data:/var/lib/mysql"
+volumes: 
+    ? data
