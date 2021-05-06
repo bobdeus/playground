@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using MySql.Data.MySqlClient;
 
 namespace playground.Controllers
 {
@@ -24,16 +25,20 @@ namespace playground.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<WeatherForecast> Get()
+        public IEnumerable<string> Get()
         {
-            var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            List<string> fred = new List<string>();
+
+            string connectionString = "Server=localhost;User ID=root;Password=Password1;Port=3306;Database=bob";
+            using var connection = new MySqlConnection(connectionString);
+            connection.Open();
+            using var command = new MySqlCommand("select * from fred;", connection);
+            using var reader = command.ExecuteReader(); 
+            while(reader.Read())
             {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
-            })
-            .ToArray();
+              fred.Add(reader.GetString(1));
+            }
+            return fred;
         }
     }
 }
