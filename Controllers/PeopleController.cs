@@ -10,35 +10,34 @@ namespace playground.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class WeatherForecastController : ControllerBase
+    public class PeopleController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
+        private readonly ILogger<PeopleController> _logger;
 
-        private readonly ILogger<WeatherForecastController> _logger;
-
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        public PeopleController(ILogger<PeopleController> logger)
         {
             _logger = logger;
         }
 
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IEnumerable<Person> Get()
         {
-            List<string> fred = new List<string>();
+            List<Person> people = new List<Person>();
 
             string connectionString = "Server=localhost;User ID=root;Password=Password1;Port=3306;Database=bob";
             using var connection = new MySqlConnection(connectionString);
             connection.Open();
             using var command = new MySqlCommand("select * from fred;", connection);
-            using var reader = command.ExecuteReader(); 
-            while(reader.Read())
+            using var reader = command.ExecuteReader();
+            while (reader.Read())
             {
-              fred.Add(reader.GetString(1));
+                people.Add(new Person
+                {
+                    ID = int.Parse(reader.GetString(0)),
+                    Name = reader.GetString(1)
+                });
             }
-            return fred;
+            return people;
         }
     }
 }
